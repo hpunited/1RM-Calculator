@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1RM Calculator</title>
+</head>
+<body>
+    <h1>Welkom bij de 1RM Calculator</h1>
+    <form id="calculator-form">
+        <label for="weight">Gewicht (kg):</label>
+        <input type="number" id="weight" name="weight" required>
+        <br>
+        <label for="reps">Herhalingen:</label>
+        <input type="number" id="reps" name="reps" required>
+        <br><br>
+        <button type="button" onclick="calculate()">Bereken</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        async function calculate() {
+            const weight = document.getElementById('weight').value;
+            const reps = document.getElementById('reps').value;
+            const response = await fetch('/api/1rm', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ weight: weight, reps: reps }),
+            });
+            const data = await response.json();
+            if (data.one_rm) {
+                document.getElementById('result').textContent = `Je 1RM is: ${data.one_rm} kg`;
+            } else {
+                document.getElementById('result').textContent = `Fout: ${data.error}`;
+            }
+        }
+    </script>
+</body>
+</html>
